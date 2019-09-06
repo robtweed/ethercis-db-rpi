@@ -19,6 +19,7 @@ ENV PGDATA  /var/lib/postgresql/pgdata
 #ETHERCIS: add files
 ADD customise.sh /
 ADD v9_migration.sql /
+ADD pg_hba.conf /
 
 RUN chmod +x /customise.sh
 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 pgxn install temporal_tables
 
 git clone https://github.com/postgrespro/jsquery.git
@@ -9,11 +11,20 @@ PATH=$PATH:/usr/share
 make USE_PGXS=1 BISON=bison FLEX=flex
 make USE_PGXS=1 install
 
+# Overwrite the pg_hba.conf connection configuration file with
+# the one in the repo
+
+mv /pg_hba.conf /var/lib/postgresql/pgdata
+
 cd ..
 
 echo 'now creating user root'
 su - postgres -c 'psql -c "CREATE USER root WITH SUPERUSER;"'
 echo 'created user root'
+
+# also add a password for the postgres user
+
+su - postgres -c $'psql -c "ALTER USER postgres PASSWORD \'postgres\';"'
 
 #fetch db creation script for ethercis and run it
 git clone https://github.com/ethercis/ehrservice || { echo "Could not clone ethercis/ehrservice repository, exiting..." && exit 1; }
